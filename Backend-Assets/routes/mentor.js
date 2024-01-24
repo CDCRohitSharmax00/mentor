@@ -15,7 +15,7 @@ router.post('/create-mentor-profile', async (req, res) => {
     }
 
     // Create a new mentor profile
-    const mentorProfile = new MentorProfile({ bio, expertise });
+    const mentorProfile = new MentorProfile({user :userId, bio, expertise });
     await mentorProfile.save();
 
     // Update the user with the mentor profile ID
@@ -70,7 +70,7 @@ router.put('/:userId', async (req, res) => {
 router.get('/all-mentors', async (req, res) => {
   try {
     // Find all mentor profiles and populate the associated user details
-    const allMentors = await MentorProfile.find().populate('user', '-password');
+    const allMentors = await User.find().populate('mentorProfile');
 
     // The 'user' field in MentorProfile schema should be a reference to the User model
 
