@@ -15,6 +15,7 @@ app.use(express.urlencoded({ extended: false }));
 //routes
 app.use("/api", loginRoute);
 app.use('/mentor', mentorRoutes);
+// app.use('/mentor', mentorRoutes);
 connectDB(); //! database 
 
 

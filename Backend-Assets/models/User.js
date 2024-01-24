@@ -40,8 +40,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: 'https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg',
   
-  }
+  },
+  mentorProfile: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'MentorProfile' // This should match the name you used when creating the MentorProfile model
+  },
 });
+
 
 // Hash password before saving to database
 userSchema.pre('save', async function (next) {
