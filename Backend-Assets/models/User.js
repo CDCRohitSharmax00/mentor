@@ -17,8 +17,8 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    min: [6, "Password Must be at least 6, got {VALUE}"],
-    max: [12, "Password Must be at most 12, got {VALUE}"]
+    min: [6, "Password must be at least 6, got {VALUE}"],
+    max: [12, "Password must be at most 12, got {VALUE}"]
   },
   country: {
     type: String,
@@ -43,7 +43,9 @@ const userSchema = new mongoose.Schema({
   },
   UserProfile: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'UserProfile' // This should match the name you used when creating the MentorProfile model
+    ref: `${this.role}Profile`,
+    unique:true 
+    // This should match the name you used when creating the MentorProfile model
   },
 });
 
