@@ -19,7 +19,7 @@ router.post('/create-mentor-profile', async (req, res) => {
     await mentorProfile.save();
 
     // Update the user with the mentor profile ID
-    user.mentorProfile = mentorProfile._id;
+    user.userProfile = mentorProfile._id;
     await user.save();
 
     res.json({ user, mentorProfile });
@@ -46,12 +46,13 @@ router.put('/:userId', async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-   
+    console.log('User:', user.userProfile);
     // Check if the user has a mentor profile
     let mentorProfile;
-    if (user.role === 'mentor' && user.mentorProfile) {
+    if (user.role === 'mentor' && user.userProfile) {
+      console.log('Updating mentor profile');
       // Update mentor details if present
-      mentorProfile = await MentorProfile.findByIdAndUpdate(user.mentorProfile, updatedData.mentor, { new: true });
+      mentorProfile = await MentorProfile.findByIdAndUpdate(user.userProfile, updatedData.mentor, { new: true });
       console.log('UpdatedMentorProfile:', mentorProfile);
 
       if (!mentorProfile) {
@@ -70,7 +71,7 @@ router.put('/:userId', async (req, res) => {
 router.get('/all-mentors', async (req, res) => {
   try {
     // Find all mentor profiles and populate the associated user details
-    const allMentors = await MentorProfile.find().populate('user', '-password');
+    const allMentors = await User.find().populate('userProfile');
 
     // The 'user' field in MentorProfile schema should be a reference to the User model
 

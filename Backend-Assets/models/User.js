@@ -41,7 +41,7 @@ const userSchema = new mongoose.Schema({
     default: 'https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg',
   
   },
-  mentorProfile: {
+  userProfile: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'MentorProfile' // This should match the name you used when creating the MentorProfile model
   },
