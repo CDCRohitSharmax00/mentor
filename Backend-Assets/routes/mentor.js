@@ -15,7 +15,7 @@ router.post('/create-mentor-profile', async (req, res) => {
     }
 
     // Create a new mentor profile
-    const mentorProfile = new MentorProfile({ bio, expertise });
+    const mentorProfile = new MentorProfile({ user: userId, bio, expertise });
     await mentorProfile.save();
 
     // Update the user with the mentor profile ID
