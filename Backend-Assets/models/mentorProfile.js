@@ -6,6 +6,6 @@ const mentorProfileSchema = new mongoose.Schema({
   // other mentor-specific fields...
 });
 
-const MentorProfile = mongoose.model('MentorProfile', mentorProfileSchema);
+const MentorProfile = mongoose.model('mentor', mentorProfileSchema);
 
 module.exports = MentorProfile;

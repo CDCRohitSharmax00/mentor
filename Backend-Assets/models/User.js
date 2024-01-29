@@ -43,13 +43,8 @@ const userSchema = new mongoose.Schema({
   },
   userProfile: {
     type: mongoose.Schema.Types.ObjectId,
-    refPath: 'userProfileType'
-  },
-  userProfileType: {
-    type: String,
-    // required: true,
-    enum: ['MentorProfile', 'MenteeProfile']
-  },
+    refPath: 'role'
+  }
 });
 
 

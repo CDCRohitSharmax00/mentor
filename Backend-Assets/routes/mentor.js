@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const MentorProfile = require('../models/mentorProfile');
+const MenteeProfile = require('../models/menteeProfile');
 const User = require('../models/User');
 
 // Create a mentor profile for a user
@@ -20,10 +21,36 @@ router.post('/create-mentor-profile', async (req, res) => {
 
     // Update the user with the mentor profile ID and type
     user.userProfile = mentorProfile._id;
-    user.userProfileType = 'MentorProfile';
+    user.role = 'mentor';
     await user.save();
 
     res.json({ user, mentorProfile });
+  } catch (error) {
+    console.error('Error creating mentor profile:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+router.post('/create-mentee-profile', async (req, res) => {
+  try {
+    const { userId, bio, expertise } = req.body;
+
+    // Check if the user exists
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Create a new mentor profile
+    const menteeProfile = new MenteeProfile({ user: userId, bio, expertise });
+    await menteeProfile.save();
+
+    // Update the user with the mentor profile ID and type
+    user.userProfile = menteeProfile._id;
+    user.role = 'mentee';
+    await user.save();
+
+    res.json({ user, menteeProfile });
   } catch (error) {
     console.error('Error creating mentor profile:', error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -73,6 +100,22 @@ router.get('/all-mentors', async (req, res) => {
     // Find all mentor profiles and populate the associated user details
     // const allMentors = await User.find().populate('userProfile');
     const allMentors = await User.find({ userProfileType: 'MentorProfile' }).populate('userProfile');
+
+    // The 'user' field in MentorProfile schema should be a reference to the User model
+
+    console.log(allMentors);
+    res.json(allMentors);
+  } catch (error) {
+    console.error('Error fetching all mentors:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+})
+
+router.get('/all', async (req, res) => {
+  try {
+    // Find all mentor profiles and populate the associated user details
+    // const allMentors = await User.find().populate('userProfile');
+    const allMentors = await User.find().populate('userProfile');
 
     // The 'user' field in MentorProfile schema should be a reference to the User model
 
