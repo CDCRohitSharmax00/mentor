@@ -18,8 +18,9 @@ router.post('/create-mentor-profile', async (req, res) => {
     const mentorProfile = new MentorProfile({ user: userId, bio, expertise });
     await mentorProfile.save();
 
-    // Update the user with the mentor profile ID
+    // Update the user with the mentor profile ID and type
     user.userProfile = mentorProfile._id;
+    user.userProfileType = 'MentorProfile';
     await user.save();
 
     res.json({ user, mentorProfile });
@@ -28,7 +29,6 @@ router.post('/create-mentor-profile', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
 
 router.put('/:userId', async (req, res) => {
   console.log('PUT /:userId route hit');
@@ -49,7 +49,7 @@ router.put('/:userId', async (req, res) => {
     console.log('User:', user.userProfile);
     // Check if the user has a mentor profile
     let mentorProfile;
-    if (user.role === 'mentor' && user.userProfile) {
+    if (user.userProfileType === 'MentorProfile' && user.userProfile) {
       console.log('Updating mentor profile');
       // Update mentor details if present
       mentorProfile = await MentorProfile.findByIdAndUpdate(user.userProfile, updatedData.mentor, { new: true });
@@ -71,7 +71,8 @@ router.put('/:userId', async (req, res) => {
 router.get('/all-mentors', async (req, res) => {
   try {
     // Find all mentor profiles and populate the associated user details
-    const allMentors = await User.find().populate('userProfile');
+    // const allMentors = await User.find().populate('userProfile');
+    const allMentors = await User.find({ userProfileType: 'MentorProfile' }).populate('userProfile');
 
     // The 'user' field in MentorProfile schema should be a reference to the User model
 

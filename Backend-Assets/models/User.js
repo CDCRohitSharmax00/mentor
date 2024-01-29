@@ -43,7 +43,12 @@ const userSchema = new mongoose.Schema({
   },
   userProfile: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'MentorProfile' // This should match the name you used when creating the MentorProfile model
+    refPath: 'userProfileType'
+  },
+  userProfileType: {
+    type: String,
+    // required: true,
+    enum: ['MentorProfile', 'MenteeProfile']
   },
 });
 
