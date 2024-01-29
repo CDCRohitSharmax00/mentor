@@ -90,11 +90,6 @@ const mentorProfileSchema = new mongoose.Schema({
 
   /*certifications*/
 
-
-
-
-
-
   bio: { type: String, required: true },
   expertise: { type: String, required: true }
   // other mentor-specific fields...

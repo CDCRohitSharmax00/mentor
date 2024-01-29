@@ -43,10 +43,13 @@ const userSchema = new mongoose.Schema({
   },
   UserProfile: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: `${this.role}Profile`,
-    unique:true 
+    refPath: function (doc) {
+      return doc.role + 'Profile'; // Dynamically set the refPath based on the role
+    },
+  
     // This should match the name you used when creating the MentorProfile model
   },
+
 });
 
 
