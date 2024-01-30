@@ -76,7 +76,7 @@ router.put('/:userId', async (req, res) => {
     console.log('User:', user.userProfile);
     // Check if the user has a mentor profile
     let mentorProfile;
-    if (user.userProfileType === 'MentorProfile' && user.userProfile) {
+    if (user.role === 'mentor' && user.userProfile) {
       console.log('Updating mentor profile');
       // Update mentor details if present
       mentorProfile = await MentorProfile.findByIdAndUpdate(user.userProfile, updatedData.mentor, { new: true });
