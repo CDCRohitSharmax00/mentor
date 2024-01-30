@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 
 const mentorProfileSchema = new mongoose.Schema({
-  bio: { type: String, required: true },
-  expertise: { type: String, required: true },
+  bio: { type: String },
+  expertise: { type: String },
   yoe: String,
   // other mentor-specific fields...
 });
