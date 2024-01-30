@@ -50,7 +50,9 @@ const userSchema = new mongoose.Schema({
     // required: true,
     enum: ['MentorProfile', 'MenteeProfile']
   },
-});
+},
+  {timestamps:true}
+);
 
 
 // Hash password before saving to database

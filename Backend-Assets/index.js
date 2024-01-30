@@ -1,6 +1,7 @@
 const express = require("express");
 const loginRoute = require("./routes/loginRoute");
 const mentorRoutes = require("./routes/mentor");
+const menteeRoutes = require("./routes/menteeRoutes");
 const connectDB = require("./database/db");
 const cors = require("cors");
 const app = express();
@@ -15,6 +16,8 @@ app.use(express.urlencoded({ extended: false }));
 //routes
 app.use("/api", loginRoute);
 app.use('/mentor', mentorRoutes);
+app.use('/mentee', menteeRoutes);
+
 // app.use('/mentor', mentorRoutes);
 connectDB(); //! database 
 
