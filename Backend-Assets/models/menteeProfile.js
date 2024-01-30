@@ -1,11 +1,11 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const menteeProfileSchema = new mongoose.Schema({
-  bio: { type: String, required: true },
-  expertise: { type: String, required: true },
+  bio: { type: String },
+  expertise: { type: String },
   // other mentor-specific fields...
 });
 
-const MenteeProfile = mongoose.model('mentee', menteeProfileSchema);
+const MenteeProfile = mongoose.model("MenteeProfile", menteeProfileSchema);
 
 module.exports = MenteeProfile;

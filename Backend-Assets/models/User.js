@@ -1,6 +1,8 @@
-const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
+const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const MentorProfile = require("./mentorProfile");
+const MenteeProfile = require("./menteeProfile");
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -18,7 +20,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     min: [6, "Password Must be at least 6, got {VALUE}"],
-    max: [12, "Password Must be at most 12, got {VALUE}"]
+    max: [12, "Password Must be at most 12, got {VALUE}"],
   },
   country: {
     type: String,
@@ -32,24 +34,43 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     enum: {
-      values: ['mentor', 'mentee', 'organization'],
-      message: 'Role is either mentor, mentee, or organization'
-    }
+      values: ["mentor", "mentee", "organization"],
+      message: "Role is either mentor, mentee, or organization",
+    },
   },
-  profilePicture:{
+  profilePicture: {
     type: String,
-    default: 'https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg',
-  
+    default:
+      "https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg",
   },
-  userProfile: {
-    type: mongoose.Schema.Types.ObjectId,
-    refPath: 'role'
+  details: {
+    type: mongoose.Schema.Types.Mixed,
+  },
+});
+
+// based on role creating profile schema
+userSchema.pre("save", async function (next) {
+  try {
+    if (!this.details) {
+      switch (this.role) {
+        case "mentor":
+          this.details = await MentorProfile.create({});
+          break;
+        case "mentee":
+          this.details = await MenteeProfile.create({});
+          break;
+        default:
+          throw new Error("Invalid role");
+      }
+    }
+    next();
+  } catch (error) {
+    next(error);
   }
 });
 
-
 // Hash password before saving to database
-userSchema.pre('save', async function (next) {
+userSchema.pre("save", async function (next) {
   try {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(this.password, salt);
@@ -63,7 +84,9 @@ userSchema.pre('save', async function (next) {
 // Generate JWT token
 userSchema.methods.generateAuthToken = function () {
   const payload = { id: this._id, username: this.username, role: this.role };
-  const token = jwt.sign(payload, process.env.TOKEN_SECRET, { expiresIn: '1800s' });
+  const token = jwt.sign(payload, process.env.TOKEN_SECRET, {
+    expiresIn: "1800s",
+  });
   return token;
 };
 
@@ -73,7 +96,7 @@ userSchema.methods.getUserData = function () {
     // Exclude sensitive data
     name: this.username,
     email: this.email,
-    
+
     // ... add other fields as needed
   };
 };
