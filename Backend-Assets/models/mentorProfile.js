@@ -7,6 +7,6 @@ const mentorProfileSchema = new mongoose.Schema({
 },
 {timestamps:true});
 
-const MentorProfile = mongoose.model('MentorProfile', mentorProfileSchema);
+const MentorProfile = mongoose.model('mentor', mentorProfileSchema);
 
 module.exports = MentorProfile;
