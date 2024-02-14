@@ -4,34 +4,69 @@ const MentorProfile = require('../models/mentorProfile');
 const MenteeProfile = require('../models/menteeProfile');
 const User = require('../models/User');
 
-// Create a mentor profile for a user
-router.post('/create-mentor-profile', async (req, res) => {
+// Create a profile for a user
+router.post('/create-profile/:id', async (req, res) => {
   try {
-    const { userId, bio, expertise } = req.body;
+    const userId=req.params.id;
+    const { bio, expertise } = req.body;
+   
+      // Check if the user exists
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
 
-    // Check if the user exists
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      switch (user.role) {
+
+        case "mentor":
+          try {
+            // Create a new mentor profile
+            const mentorProfile = new MentorProfile({ user: userId, bio, expertise });
+            await mentorProfile.save();
+
+            // Update the user with the mentor profile ID and type
+            user.userProfile = mentorProfile._id;
+            user.role = 'mentor';
+            await user.save();
+
+            res.json({ user, mentorProfile });
+          } catch (error) {
+            console.error('Error creating mentor profile:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+          }
+          break;
+
+        case "mentee":
+          try {
+            // Create a new mentee profile
+            const menteeProfile = new MenteeProfile({ user: userId, bio, expertise });
+            await menteeProfile.save();
+
+            // Update the user with the mentee profile ID and type
+            user.userProfile = menteeProfile._id;
+            user.role = 'mentee';
+            await user.save();
+
+            res.json({ user, menteeProfile });
+          } catch (error) {
+            console.error('Error creating mentee profile:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+          }
+          break;
+
+        default:
+          res.status(400).json({ error: 'Invalid user role' });
+          break;
+      }
+    } catch (error) {
+      console.error('Error finding user:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
     }
+  } 
+);
 
-    // Create a new mentor profile
-    const mentorProfile = new MentorProfile({ user: userId, bio, expertise });
-    await mentorProfile.save();
 
-    // Update the user with the mentor profile ID and type
-    user.userProfile = mentorProfile._id;
-    user.role = 'mentor';
-    await user.save();
-
-    res.json({ user, mentorProfile });
-  } catch (error) {
-    console.error('Error creating mentor profile:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-router.post('/create-mentee-profile', async (req, res) => {
+/*router.post('/create-mentee-profile', async (req, res) => {
   try {
     const { userId, bio, expertise } = req.body;
 
@@ -55,7 +90,7 @@ router.post('/create-mentee-profile', async (req, res) => {
     console.error('Error creating mentor profile:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
-});
+});*/
 
 router.put('/:userId', async (req, res) => {
   console.log('PUT /:userId route hit');
