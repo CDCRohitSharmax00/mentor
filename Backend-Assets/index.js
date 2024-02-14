@@ -17,8 +17,9 @@ app.use("/api", loginRoute);
 app.use("/mentor", mentorRoutes);
 
 //user profile
-const userRoutes = require("./routes/user.routes");
+const userRoutes = require("./routes/profile");
 app.use("/api/users", userRoutes);
+
 // app.use('/mentor', mentorRoutes);
 connectDB(); //! database
 

@@ -13,6 +13,7 @@ admin.initializeApp({
   databaseURL: firebaseConfig.databaseURL,
 });
 
+//create user
 async function signup(req, res, next) {
   // const response = validationResult(req);
   // if (!response.isEmpty()) {
@@ -24,10 +25,10 @@ async function signup(req, res, next) {
   // }
   const { username, email, password, country, phonenumber, role } = req.body;
   try {
+
     let user = await User.findOne({ email });
     if (user) {
-      console.log("hlooo");
-      return next(errorHandler(400, "User not dsdfound"));
+      return next(errorHandler(400, "User already exists"));
     }
     user = new User({
       username,
@@ -46,6 +47,7 @@ async function signup(req, res, next) {
   }
 }
 
+//user login
 async function signin(req, res, next) {
   // const response = validationResult(req);
   // if (!response.isEmpty()) {

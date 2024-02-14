@@ -156,7 +156,4 @@ router.get('/all-users-mentors', async (req, res) => {
   }
 });
 
-
-
-
 module.exports = router;
