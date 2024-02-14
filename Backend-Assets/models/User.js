@@ -43,7 +43,6 @@ const userSchema = new mongoose.Schema({
   },
   userProfile: {
     type: mongoose.Schema.Types.ObjectId,
-<<<<<<< HEAD
     refPath: 'userProfileType'
   },
   userProfileType: {
@@ -54,11 +53,7 @@ const userSchema = new mongoose.Schema({
 },
   {timestamps:true}
 );
-=======
-    refPath: 'role'
-  }
-});
->>>>>>> ee86b5268bf661542e3188fffa29eda66e8bf7da
+
 
 
 // Hash password before saving to database
